@@ -9,12 +9,15 @@
 // -- Include a warning when time is up (audio or visual).
 // -- Display time in miliseconds.
 
-
 // First, take a look at the index.html file to see the items you
 // will need to work with.
+var targetSeconds;
+var startTime;
+var timer;
 
 // This function is the equivalent of document ready
 $(function() {
+
 	/* Hints:
 	 		-- Start by registering the click event for the button.
 	 		-- You will need to keep track of the number of second somewhere.
@@ -22,12 +25,31 @@ $(function() {
 	 		-- Input values are strings, remember to parse it!
 			-- Regex for checking digit input is '^\\d+$'
 			-- Look up how setInterval() works, you will need it.
-	*/		
+	*/
+    $('#countdownButton').click(function() {
+        var inputTime = $('#time').val();
+        var digitsRe = new RegExp('^\\d+$');
+        if (!digitsRe.test(inputTime)) {
+            throw new Error('Please enter an integer for the number of seconds.');
+        }
+        targetSeconds = parseInt(inputTime);
+        console.log(targetSeconds);
+        startTime = Date.now();
+        timer = window.setInterval(countDown(), 1000);
+    });
 });
 
 function countDown() {
 	// Hint: if time < 0, stop the countdown, otherwise refresh the timer display & call createConfetti().
 	// Hint: to stop countdown, look up clearInterval() function.
+    var elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+    console.log(elapsedSeconds);
+    if (elapsedSeconds >= targetSeconds) {
+       window.clearInterval(timer);
+    } else {
+        $('#displayedTimer').text(targetSeconds + 's');
+    }
+
 }
 
 function createConfetti() {
